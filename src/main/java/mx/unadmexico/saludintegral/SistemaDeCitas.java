@@ -12,6 +12,7 @@ public class SistemaDeCitas extends JFrame {
     private final JPanel panelInicio = new JPanel(new GridBagLayout());
     private final JPanel panelAgendarCita = new JPanel(new GridBagLayout());
     private final JLabel lblInicio = new JLabel("Sistema de Gestión Hospitalaria");
+    private final JLabel lblTituloRegistroCita = new JLabel("Clínica Salud Integral - Registro de Cita");
     private final JMenu mnuInicio = new JMenu("Inicio");
     private final JMenu mnuPacientes = new JMenu("Pacientes");
     private final JMenu mnuCitas = new JMenu("Citas");
@@ -41,9 +42,7 @@ public class SistemaDeCitas extends JFrame {
         setJMenuBar(barraMenu);
 
         // Etiqueta del panel inicial
-        Font fuente = lblInicio.getFont();
-        Font fuenteGrande = fuente.deriveFont(Font.BOLD, 28f);
-        lblInicio.setFont(fuenteGrande);
+        estilizarEtiqueta(lblInicio);
         panelInicio.add(lblInicio);
 
         agregarEventos();
@@ -53,13 +52,15 @@ public class SistemaDeCitas extends JFrame {
     }
     
     private void agregarEventos() {
+        // Click en menú Citas
         mnuCitas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                abrirPanelCitas();
+                cargarPanelCitas();
             }
         });
   
+        // Click en menú Salir
         mnuSalir.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -67,10 +68,16 @@ public class SistemaDeCitas extends JFrame {
             }
         });
         
+        // Click en botón de Agendar Cita
         btnAgendarCita.addActionListener(e -> agendarCita());
     }
     
-    private void abrirPanelCitas() {
+    private void cargarPanelCitas() {
+        // Si el panel ya está cargado, no volverlo a cargar
+        if (this.getContentPane().isAncestorOf(panelAgendarCita)) {
+            return;
+        }
+
         getContentPane().removeAll();
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -81,7 +88,8 @@ public class SistemaDeCitas extends JFrame {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panelAgendarCita.add(new JLabel("Clínica Salud Integral - Registro de Cita"), gbc);
+        estilizarEtiqueta(lblTituloRegistroCita);
+        panelAgendarCita.add(lblTituloRegistroCita, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -166,6 +174,12 @@ public class SistemaDeCitas extends JFrame {
                 "Agendar Cita",
                 tipoMensaje);
     }
+    
+    private void estilizarEtiqueta(JLabel label) {
+        Font fuente = label.getFont();
+        Font fuenteGrande = fuente.deriveFont(Font.BOLD, 28f);
+        label.setFont(fuenteGrande);
+    }
 
     public static void main(String[] args) throws Exception {
         try {
@@ -173,7 +187,6 @@ public class SistemaDeCitas extends JFrame {
             sistema.setVisible(true);
         } catch (Exception e) {
             System.err.println("Error al iniciar el sistema de citas: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
